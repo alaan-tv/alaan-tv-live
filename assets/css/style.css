@@ -1,0 +1,409 @@
+@font-face {
+	font-family: baloo;
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('https://fonts.gstatic.com/s/baloobhaijaan2/v19/zYX9KUwuEqdVGqM8tPDdAA_Y-_bMAIRsdP3pBmtF8A.woff2') format('woff2'); /* Arabic */
+	unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+
+/* Styles for static fallback content */
+.static-fallback {
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* Loading indicator styles */
+.loading-indicator {
+    text-align: center;
+    padding: 30px 0;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    border-top-color: #3498db;
+    border-left-color: #2ecc71;
+    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    margin-bottom: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.loading-indicator p {
+    font-size: 16px;
+    opacity: 0.8;
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+
+.static-fallback {
+    background-color: #222;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.static-fallback h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #e0e0e0;
+    font-size: 20px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+.static-fallback h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #3498db, transparent);
+    border-radius: 2px;
+}
+
+.static-fallback-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.static-fallback-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.static-fallback img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.static-fallback-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #e0e0e0;
+    font-size: 16px;
+}
+
+.static-fallback-featured {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 25px;
+    background-color: #2a2a2a;
+}
+
+.static-fallback-featured:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.static-fallback-featured img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.static-fallback-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .static-fallback-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .static-fallback-featured .static-fallback-title {
+        font-size: 16px !important;
+        padding: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .static-fallback-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .static-fallback-featured .static-fallback-title {
+        font-size: 15px !important;
+        padding: 10px !important;
+    }
+}
+
+body {
+	margin: 0;
+	font-family: baloo, sans-serif !important;
+	background-color: #000;
+	color: #fff;
+	/* To keep the footer at the very bottom of the page on short pages */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	min-height: 100vh;
+	scroll-behavior: smooth;
+}
+
+/* Add smooth transitions for all elements */
+* {
+	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+header {
+	padding: 20px;
+	text-align: center;
+}
+
+header img {
+	max-width: min(150px, 40vw);
+	height: auto;
+}
+
+main {
+	width: 100%;
+	max-width: 1200px;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.social-container {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+	width: 100%;
+	align-items: center;
+	margin: 20px 0;
+}
+
+.widget-title {
+	font-size: 24px;
+	margin-bottom: 15px;
+	text-align: center;
+	position: relative;
+	padding-bottom: 10px;
+}
+
+.widget-title:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 60px;
+	height: 3px;
+	background: linear-gradient(90deg, #3498db, #2ecc71);
+	border-radius: 3px;
+	animation: gradientShift 3s ease infinite alternate;
+}
+
+@keyframes gradientShift {
+	0% {
+		background: linear-gradient(90deg, #3498db, #2ecc71);
+		width: 60px;
+	}
+	50% {
+		background: linear-gradient(90deg, #2ecc71, #9b59b6);
+		width: 70px;
+	}
+	100% {
+		background: linear-gradient(90deg, #9b59b6, #3498db);
+		width: 60px;
+	}
+}
+
+.widget-title svg {
+	animation: iconPulse 2s ease infinite alternate;
+}
+
+@keyframes iconPulse {
+	from { transform: scale(1); }
+	to { transform: scale(1.1); }
+}
+
+.social-widget {
+	width: 100%;
+	max-width: 800px;
+	border-radius: 15px;
+	overflow: hidden;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+	background-color: #1a1a1a;
+	padding: 20px;
+	box-sizing: border-box;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-widget:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.social-widget iframe {
+	border: none;
+	width: 100%;
+	margin-top: 15px;
+	border-radius: 10px;
+}
+
+.social-widget a {
+	display: block;
+	text-align: center;
+	margin-bottom: 15px;
+	color: #fff;
+	text-decoration: none;
+	transition: opacity 0.2s ease;
+}
+
+.social-widget a:hover {
+	opacity: 0.8;
+}
+
+.follow-button {
+	display: inline-block;
+	background-color: #3498db;
+	color: white;
+	padding: 8px 16px;
+	border-radius: 30px;
+	font-weight: bold;
+	margin-top: 10px;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	text-align: center;
+}
+
+.follow-button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-link {
+	border-radius: 10px;
+	overflow: hidden;
+	transition: transform 0.3s ease;
+}
+
+.social-link:hover {
+	transform: translateY(-3px);
+}
+
+@media (min-width: 1024px) {
+	.social-widget {
+		max-width: 900px;
+	}
+}
+
+@media (max-width: 1023px) {
+	.social-widget {
+		max-width: 800px;
+	}
+}
+
+@media (max-width: 600px) {
+	.social-widget {
+		max-width: 100%;
+		padding: 15px;
+		margin-bottom: 25px;
+	}
+	
+	.widget-title {
+		font-size: 20px;
+		padding-bottom: 8px;
+	}
+	
+	.widget-title:after {
+		width: 50px;
+		height: 2px;
+	}
+	
+	.static-fallback {
+		padding: 15px 10px;
+	}
+	
+	.static-fallback-item {
+		margin-bottom: 15px;
+		padding: 12px;
+	}
+	
+ .embedsocial-instagram iframe {
+		height: 550px !important;
+	}
+	
+	.elfsight-app-youtube-gallery iframe,
+	#instagram-fallback iframe,
+	#youtube-fallback iframe {
+		max-height: 500px !important;
+	}
+	
+	.follow-button {
+		width: 100%;
+		padding: 10px;
+		font-size: 16px;
+		margin-top: 5px;
+	}
+	
+	.youtube-banner {
+		padding: 10px !important;
+	}
+	
+	.youtube-banner svg {
+		width: 30px !important;
+		height: 30px !important;
+	}
+	
+	.youtube-banner div div:first-child {
+		font-size: 16px !important;
+	}
+	
+	.youtube-banner div div:last-child {
+		font-size: 12px !important;
+	}
+	
+	.loading-spinner {
+		width: 40px;
+		height: 40px;
+	}
+}
+
+footer {
+	background: #fff3;
+	color: #ccc;
+	padding-bottom: 0;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 36px;
+	/* To keep the footer at the very end of the page on short pages */
+	margin-top: auto;
+}
