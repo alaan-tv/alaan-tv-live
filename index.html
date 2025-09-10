@@ -277,6 +277,94 @@
 </div>
 	</div>
 </main>
+<section id="contact-map" class="contact-map-section">
+	<div class="wrapper">
+
+		<div class="contact-content">
+
+			<div class="info-card">
+				<h3>Contact Details</h3>
+				<div class="card-content">
+					<p><strong>Address: </strong>Office 1207, DSC Tower, <br/>Studio City, Dubai, <br/>Dubai, United Arab Emirates</p>
+					<p><strong>Phone: </strong><a href="tel:+97141234567" style="color: #ccc; text-decoration: none;">+971 4 123 4567</a></p>
+					<p><strong>Email: </strong><a href="mailto:info@alaan.tv" style="color: #ccc; text-decoration: none;">info@alaan.tv</a></p>
+				</div>
+			</div>
+
+			<div class="map-container">
+				<iframe src="https://maps.google.com/maps?q=Office%201207,%20DSC%20Tower,%20Studio%20City,%20Dubai,%20United%20Arab%20Emirates&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+<style>
+ .contact-map-section{padding:20px 0;background-color:#1a1a1a;color:#fff;width:100%;max-width:900px;margin:0 auto 20px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);transition:transform 0.3s ease,box-shadow 0.3s ease;}
+	.contact-map-section .wrapper{max-width:1200px;margin:0 auto;padding:0 15px}
+	.section-title{text-align:center;margin-bottom:30px;font-size:28px;color:#fff}
+	.contact-content{display:flex;gap:0 30px;align-items:stretch;min-height:250px;height:100%}
+	.map-container{flex:0 0 60%;border-radius:8px;overflow:hidden;box-shadow:0 4px 10px #0000001a;display:flex;flex-direction:column;height:100%;position:relative;min-height:250px}
+	.map-container iframe{flex-grow:1;position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
+	.info-card{flex:1 1 30%;background:#252525;border-radius:8px;padding:23px;box-shadow:0 4px 10px #0000004d;text-align:center;border:1px solid #333;display:flex;flex-direction:column;height:100%;justify-content:flex-start;align-items:center}
+	.card-icon{width:60px;height:60px;background:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+	.card-icon svg{width:30px;height:30px;fill:#fff}
+	.info-card h3{margin-top:0;margin-bottom:0;font-size:20px;color:#fff;flex-shrink:0}
+	.info-card p{color:#ccc;line-height:1.6;margin-bottom:0}
+	.card-content{flex-grow:1;display:flex;flex-direction:column;justify-content:flex-start;min-height:80px;direction:ltr}
+ @media (max-width: 1023px) {
+		.contact-map-section {
+			max-width: 800px;
+		}
+	}
+	
+	@media (max-width: 769px) {
+		.contact-content{flex-direction:column;min-height:auto}
+		.map-container,.info-card{flex:0 0 100%}
+		.map-container{margin-bottom:20px;min-height:250px}
+		.info-card{min-height:250px;padding:20px 15px}
+		.card-content{min-height:50px}
+		.section-title{font-size:24px}
+	}
+	
+ @media (max-width: 600px) {
+		.contact-map-section {
+			max-width: 100%;
+
+		}
+		.info-card h3 {
+			font-size: 18px;
+		}
+
+	}
+	
+	@media (max-width: 480px) {
+		.contact-map-section {
+			padding: 12px;
+			margin-bottom: 20px;
+		}
+		.contact-content {
+			gap: 15px;
+		}
+		.info-card {
+			padding: 15px 10px;
+			min-height: 200px;
+		}
+		.map-container {
+			min-height: 200px;
+		}
+		.info-card h3 {
+			font-size: 16px;
+		}
+		.info-card p {
+			font-size: 13px;
+			line-height: 1.4;
+		}
+		.contact-map-section .wrapper {
+			padding: 0 10px;
+		}
+	}
+</style>
 <footer>
 	<small>جميع الحقوق محفوظة © 2006 - 2025</small>
 </footer>
