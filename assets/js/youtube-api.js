@@ -411,7 +411,7 @@ class YouTubeChannelVideos {
                     height: 360
                 },
                 publishedAt: new Date(),
-                channelTitle: 'Fallback Channel',
+                channelTitle: 'Alaan TV Channel',
                 url: videoUrl // Add the URL property
             };
         });
