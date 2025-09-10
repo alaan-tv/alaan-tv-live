@@ -34,57 +34,54 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get your API key from: https://console.cloud.google.com/apis/credentials
     const youtubeApiKey = 'AIzaSyDJvk4A_K5SVv78Rl7Qaun_qFmU0_Xjo9Q'; // YouTube API key
     
-    // Set whether to show a featured video (first video larger than others)
-    // Change this to false to disable the featured video and show all videos in a grid
-    const showFeaturedVideo = false;
+    // Fetch fallback videos from JSON file
+    let showFeaturedVideo = false;
+    let fallbackVideos = [];
     
-    // Make this setting available globally for the static fallback
-    window.youtubeShowFeaturedVideo = showFeaturedVideo;
-    
-    // Create YouTube videos instance
-    const youtubeVideos = new YouTubeChannelVideos({
-        apiKey: youtubeApiKey,
-        channelUsername: '@tarfiehplus', // Channel username with @ symbol
-        maxResults: showFeaturedVideo?10:9,
-        containerSelector: '#youtube-api-container',
-        cacheExpiration: 3600, // Cache for 1 hour
-        featuredVideo: showFeaturedVideo // Controls whether to show the first video as featured
-    });
-    
-    // Initialize YouTube videos
-    youtubeVideos.init();
-    
-    // Set up fallback mechanism if YouTube API fails
-    setTimeout(function() {
-        // If the YouTube API container is empty after 5 seconds, show fallback
-        if (document.querySelector('#youtube-api-container .youtube-videos-grid') === null) {
-            document.getElementById('youtube-fallback').style.display = 'block';
+    // Fetch the fallback videos JSON file
+    fetch('assets/data/fallback-videos.json')
+        .then(response => response.json())
+        .then(data => {
+            // Get the showFeaturedVideo setting from the JSON
+            showFeaturedVideo = data.showFeaturedVideo;
             
-            // Check if secondary widget loads
-            var checkSecondaryWidget = setInterval(function() {
-                try {
-                    var fallbackFrame = document.querySelector('#youtube-fallback iframe');
-                    if (fallbackFrame && fallbackFrame.contentDocument && 
-                        fallbackFrame.contentDocument.body.children.length > 0) {
-                        // Secondary widget loaded successfully
-                        clearInterval(checkSecondaryWidget);
-                    }
-                } catch(e) {
-                    // CORS error, can't check content
-                }
-            }, 500); // Check every 500ms
+            // Make this setting available globally for the static fallback
+            window.youtubeShowFeaturedVideo = showFeaturedVideo;
             
-            // After another 3 seconds, if secondary widget hasn't loaded, show static fallback
-            setTimeout(function() {
-                try {
-                    if (document.querySelector('#youtube-fallback iframe').contentDocument.body.children.length === 0) {
-                        document.getElementById('youtube-static-fallback').style.display = 'block';
-                    }
-                } catch(e) {
-                    // If we can't access iframe content due to CORS, show static fallback
-                    document.getElementById('youtube-static-fallback').style.display = 'block';
-                }
-            }, 3000); // Wait another 3 seconds for secondary widget
-        }
-    }, 5000); // Wait 5 seconds for YouTube API to load
+            // Get the fallback videos from the JSON
+            fallbackVideos = data.videos;
+            
+            // Create YouTube videos instance
+            const youtubeVideos = new YouTubeChannelVideos({
+                apiKey: youtubeApiKey,
+                channelUsername: '@tarfiehplus', // Channel username with @ symbol
+                maxResults: showFeaturedVideo ? 10 : 9,
+                containerSelector: '#youtube-api-container',
+                cacheExpiration: 3600, // Cache for 1 hour
+                featuredVideo: showFeaturedVideo, // Controls whether to show the first video as featured
+                fallbackVideos: fallbackVideos // Fallback videos to use if API fails
+            });
+            
+            // Initialize YouTube videos with integrated fallback mechanism
+            youtubeVideos.init();
+        })
+        .catch(error => {
+            console.error('Error loading fallback videos:', error);
+            
+            // Fallback to default settings if JSON fails to load
+            showFeaturedVideo = false;
+            window.youtubeShowFeaturedVideo = showFeaturedVideo;
+            
+            // Create YouTube videos instance with empty fallback videos
+            const youtubeVideos = new YouTubeChannelVideos({
+                apiKey: youtubeApiKey,
+                channelUsername: '@tarfiehplus',
+                maxResults: showFeaturedVideo ? 10 : 9,
+                containerSelector: '#youtube-api-container',
+                cacheExpiration: 3600,
+                featuredVideo: showFeaturedVideo
+            });
+            
+            youtubeVideos.init();
+        });
 });

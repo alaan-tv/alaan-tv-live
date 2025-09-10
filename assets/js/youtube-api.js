@@ -7,8 +7,10 @@
  * Features:
  * - Fetches latest videos from a specified channel
  * - Displays videos in a responsive grid with thumbnails and titles
- * - Handles API errors gracefully with fallback options
+ * - Handles API errors gracefully with fallback options from JSON file
  * - Caches results to reduce API quota usage
+ * - Supports custom titles and URLs for fallback videos
+ * - Controls featured video display based on JSON configuration
  */
 
 class YouTubeChannelVideos {
@@ -21,6 +23,9 @@ class YouTubeChannelVideos {
             containerSelector: '#youtube-api-container', // Container element
             cacheExpiration: 3600, // Cache expiration in seconds (1 hour)
             featuredVideo: true, // Whether to show the first video as featured (optional)
+            fallbackVideos: [], // Array of fallback videos to use if API fails
+                               // Can be an array of strings (video IDs) or
+                               // an array of objects with id and title properties: [{id: 'videoId', title: 'Custom Title'}]
             ...options
         };
         
@@ -64,12 +69,27 @@ class YouTubeChannelVideos {
                     this.saveToCache(videos);
                     this.renderVideos(videos);
                 } else {
-                    this.showError('No videos found');
+                    // Try to use fallback videos if available
+                    const fallbackVideos = this.createFallbackVideos();
+                    if (fallbackVideos.length > 0) {
+                        console.log('Using fallback videos');
+                        this.renderVideos(fallbackVideos);
+                    } else {
+                        this.showError('No videos found');
+                    }
                 }
             })
             .catch(error => {
                 console.error('Error fetching YouTube videos:', error);
-                this.showError('Failed to load videos');
+                
+                // Try to use fallback videos if available
+                const fallbackVideos = this.createFallbackVideos();
+                if (fallbackVideos.length > 0) {
+                    console.log('Using fallback videos due to API error');
+                    this.renderVideos(fallbackVideos);
+                } else {
+                    this.showError('Failed to load videos');
+                }
             });
     }
     
@@ -221,15 +241,11 @@ class YouTubeChannelVideos {
             const featuredElement = document.createElement('div');
             featuredElement.className = 'youtube-featured-video';
             
-            // Format date in Arabic
-            const publishDate = new Intl.DateTimeFormat('ar-SA', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            }).format(featuredVideo.publishedAt);
+            // Use the URL property if available, otherwise construct it from the ID
+            const featuredVideoUrl = featuredVideo.url || `https://www.youtube.com/watch?v=${featuredVideo.id}`;
             
             featuredElement.innerHTML = `
-                <a href="https://www.youtube.com/watch?v=${featuredVideo.id}" target="_blank" class="youtube-video-link">
+                <a href="${featuredVideoUrl}" target="_blank" class="youtube-video-link">
                     <div class="youtube-thumbnail-container">
                         <img src="${featuredVideo.thumbnail.url}" alt="${featuredVideo.title}" class="youtube-thumbnail">
                         <div class="youtube-play-button">
@@ -241,7 +257,6 @@ class YouTubeChannelVideos {
                     </div>
                     <div class="youtube-video-info">
                         <h4 class="youtube-video-title">${featuredVideo.title}</h4>
-                        <div class="youtube-video-date">${publishDate}</div>
                     </div>
                 </a>
             `;
@@ -259,15 +274,11 @@ class YouTubeChannelVideos {
             const videoElement = document.createElement('div');
             videoElement.className = 'youtube-video-item';
             
-            // Format date in Arabic
-            const publishDate = new Intl.DateTimeFormat('ar-SA', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            }).format(video.publishedAt);
+            // Use the URL property if available, otherwise construct it from the ID
+            const videoUrl = video.url || `https://www.youtube.com/watch?v=${video.id}`;
             
             videoElement.innerHTML = `
-                <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" class="youtube-video-link">
+                <a href="${videoUrl}" target="_blank" class="youtube-video-link">
                     <div class="youtube-thumbnail-container">
                         <img src="${video.thumbnail.url}" alt="${video.title}" class="youtube-thumbnail">
                         <div class="youtube-play-button">
@@ -279,7 +290,6 @@ class YouTubeChannelVideos {
                     </div>
                     <div class="youtube-video-info">
                         <h4 class="youtube-video-title">${video.title}</h4>
-                        <div class="youtube-video-date">${publishDate}</div>
                     </div>
                 </a>
             `;
@@ -373,6 +383,39 @@ class YouTubeChannelVideos {
             return null;
         }
     }
+    
+    /**
+     * Create video objects from fallback videos
+     * Accepts either an array of video IDs (strings) or an array of objects with id, title, and url properties
+     * The fallback videos are typically loaded from a JSON file via the script.js file
+     * The JSON file also controls the featured video display setting
+     */
+    createFallbackVideos() {
+        if (!this.options.fallbackVideos || this.options.fallbackVideos.length === 0) {
+            return [];
+        }
+        
+        return this.options.fallbackVideos.map((video, index) => {
+            // Check if the video is an object with id, title, and url or just a string ID
+            const videoId = typeof video === 'object' ? video.id : video;
+            const videoTitle = typeof video === 'object' && video.title ? video.title : `Video ${index + 1}`;
+            const videoUrl = typeof video === 'object' && video.url ? video.url : `https://www.youtube.com/watch?v=${videoId}`;
+            
+            return {
+                id: videoId,
+                title: videoTitle,
+                description: '',
+                thumbnail: {
+                    url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                    width: 480,
+                    height: 360
+                },
+                publishedAt: new Date(),
+                channelTitle: 'Fallback Channel',
+                url: videoUrl // Add the URL property
+            };
+        });
+    }
 }
 
 // Add CSS styles
@@ -401,9 +444,6 @@ const addYouTubeStyles = () => {
             margin-bottom: 10px;
         }
         
-        .youtube-featured-video .youtube-video-date {
-            font-size: 14px;
-        }
         
         .youtube-featured-video .youtube-video-info {
             padding: 16px;
@@ -504,12 +544,6 @@ const addYouTubeStyles = () => {
             text-align: right;
         }
         
-        .youtube-video-date {
-            font-size: 12px;
-            color: #606060;
-            direction: rtl;
-            text-align: right;
-        }
         
         .youtube-channel-info {
             margin-bottom: 15px;
