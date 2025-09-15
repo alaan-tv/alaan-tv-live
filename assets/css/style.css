@@ -578,6 +578,13 @@ main {
 		padding: 0 10px;
 	}
 }
+.tag-line{
+	border: 3px solid #fff;
+	border-radius: 50px;
+	padding: 10px 30px;
+	font-size: 26px;
+	margin-top: 20px;
+}
 
 footer {
 	background: #fff3;
